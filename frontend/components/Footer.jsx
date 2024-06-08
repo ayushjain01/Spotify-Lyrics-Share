@@ -19,7 +19,7 @@ export default function Footer() {
           href="#"
           className="flex items-center justify-center text-gray-600 font-bold"
         >
-          <img src="/logo.svg" alt="Logo" className="h-8 mr-4" /> Lyrics Share
+          <img src="/logo.svg" alt="Logo" className="h-8 mr-4" /> lyrics share
         </a>
         <p className="text-sm text-gray-600 sm:text-center mt-2 dark:text-gray-400">
           © 2024 | Made by 

@@ -5,8 +5,8 @@ export default function Navbar() {
         <div className="ml-4">
           <a href="#">
             <p className="text-gray-600 flex items-center font-bold">
-              <img src="/logo.svg" alt="Logo" className="h-8 mr-4" /> Lyrics
-              Share
+              <img src="/logo.svg" alt="Logo" className="h-8 mr-4" /> lyrics
+              share
             </p>
           </a>
         </div>

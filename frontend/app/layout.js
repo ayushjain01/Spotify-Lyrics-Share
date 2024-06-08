@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 
 
 export const metadata = {
-  title: "Lyrics Share",
+  title: "lyrics share",
   description: "Share lyrics with custom open graph.",
 };
 
