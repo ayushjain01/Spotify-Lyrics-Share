@@ -1,11 +1,16 @@
 "use client";
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function SearchBar() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [trackName, setTrackName] = useState('');
+  const router = useRouter();
 
   const handleSearch = () => {
-    console.log(searchTerm);
+    if (trackName) {
+      const query = `track=${encodeURIComponent(trackName)}`;
+      router.push(`/result?${query}`);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -15,16 +20,15 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto mb-8 flex items-center">
+    <div className="w-full max-w-md mx-auto mb-8 flex items-center space-x-2">
       <input
         type="text"
-        placeholder="search..."
-        className="w-full px-4 py-2 border text-gray-800 rounded-md focus:outline-none focus:border-newYellow mr-2"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search track..."
+        className="w-full px-4 py-2 border text-gray-800 rounded-md focus:outline-none focus:border-newYellow"
+        value={trackName}
+        onChange={(e) => setTrackName(e.target.value)}
         onKeyPress={handleKeyPress}
       />
-      
       <button
         className="bg-newYellow text-white px-4 py-2 rounded-md focus:outline-none"
         onClick={handleSearch}
