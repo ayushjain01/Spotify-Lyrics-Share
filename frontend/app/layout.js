@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "lyrics share",
-  description: "Share lyrics with custom open graph.",
+  description: "share lyrics with custom open graph.",
 };
 
 export default function RootLayout({ children }) {

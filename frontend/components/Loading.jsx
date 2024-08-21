@@ -19,8 +19,8 @@ const Loading = () => {
         wrapperStyle={{}}
         wrapperClass=""
       />
-      <p className="text-white text-xl mt-4">Loading, please wait...</p>
-      <p className="text-center text-sm sm:text-base mt-4"><strong>Note:</strong> Search results might not be entirely accurate.</p>
+      <p className="text-white text-xl mt-4">loading, please wait...</p>
+      <p className="text-center text-sm sm:text-base mt-4"><strong>note:</strong> search results might not be entirely accurate.</p>
     </div>
   );
 };
