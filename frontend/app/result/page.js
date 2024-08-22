@@ -223,21 +223,43 @@ export default function ResultPage() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto m-8 p-4 text-gray-200 rounded-md relative">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl mt-10">search results</h1>
+    <div className="w-full max-w-md mx-auto m-8 pt-16 text-gray-200 rounded-md relative">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl flex items-center space-x-4">
+        <a
+          className="text-white text-xl bg-newYellow hover:bg-amber-500 rounded-md px-4 py-2 flex items-center"
+          href="/"
+        >
+          <svg
+            fill="#000000"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-6 h-6"
+          >
+            <rect
+              width="24"
+              height="24"
+              transform="rotate(90 12 12)"
+              opacity="0"
+            ></rect>
+            <path d="M13.83 19a1 1 0 0 1-.78-.37l-4.83-6a1 1 0 0 1 0-1.27l5-6a1 1 0 0 1 1.54 1.28L10.29 12l4.32 5.36a1 1 0 0 1-.78 1.64z"></path>
+          </svg>
+        </a>
+        <span>search results</span>
+      </h1>
+
       <p className="text-white text-xl mt-4">select lyrics to share</p>
       <div className="flex items-center mb-4 mt-4">
         <img
           src={data.image}
           alt={`${data.title}`}
-          className="w-32 h-32 rounded mr-4"
+          className="w-32 h-32 rounded mr-4 object-cover rounded-lg"
         />
         <div>
           <h2 className="text-xl font-bold">{data.title}</h2>
         </div>
       </div>
       <div className="mb-4">
-        <h2 className="text-lg font-bold mb-2">Lyrics</h2>
+        <h2 className="text-lg font-bold mb-2">lyrics</h2>
         <div className="space-y-2">
           {lines.map((line, index) => (
             <button

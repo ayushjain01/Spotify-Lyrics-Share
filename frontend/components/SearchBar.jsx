@@ -30,7 +30,7 @@ export default function SearchBar() {
         onKeyPress={handleKeyPress}
       />
       <button
-        className="bg-newYellow text-white px-4 py-2 rounded-md focus:outline-none"
+        className="bg-newYellow hover:bg-amber-500 text-white px-4 py-2 rounded-md focus:outline-none"
         onClick={handleSearch}
       >
         <svg
