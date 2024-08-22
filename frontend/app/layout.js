@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata = {
   title: "Lyrics Share - Dynamic Open Graph Generation",
