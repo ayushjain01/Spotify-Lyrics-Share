@@ -2,6 +2,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "../../components/Loading";
+import { Suspense } from 'react';
 
 export default function ResultPage() {
   const router = useRouter();
@@ -222,6 +223,7 @@ export default function ResultPage() {
   }
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <div className="w-full max-w-md mx-auto m-8 pt-16 text-gray-200 rounded-md relative">
       <h1 className="text-3xl sm:text-4xl md:text-5xl flex items-center space-x-4">
         <a
@@ -305,5 +307,6 @@ export default function ResultPage() {
         </div>
       )}
     </div>
+    </Suspense>
   );
 }
