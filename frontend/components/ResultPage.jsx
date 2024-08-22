@@ -95,6 +95,29 @@ export default function ResultPage() {
               newTag.textContent = resultData.title;
               document.head.appendChild(newTag);
             }
+            tag = document.querySelector('twitter:description');
+            if (tag) {
+              tag.setAttribute(
+                "content",
+                resultData.title + " Song lyrics with custom open graph"
+              );
+            } else {
+              const newTag = document.createElement("twitter:description");
+              newTag.setAttribute(
+                "content",
+                resultData.title + " Song lyrics with custom open graph"
+              );
+              document.head.appendChild(newTag);
+            }
+            tag = document.querySelector('twitter:title');
+            if (tag) {
+              tag.setAttribute("content", resultData.title);
+            } else {
+              const newTag = document.createElement("twitter:title");
+              newTag.setAttribute("content", resultData.title);
+              document.head.appendChild(newTag);
+            }
+
           } else if (response.status === 404) {
             router.push("/404");
           } else {
@@ -139,6 +162,14 @@ export default function ResultPage() {
         newMetaTag.setAttribute("property", "og:image");
         newMetaTag.setAttribute("content", ogImageUrl);
         document.head.appendChild(newMetaTag);
+      }
+      const twitterTag = document.querySelector("twitter:image");
+      if (twitterTag) {
+        twitterTag.setAttribute("content", ogImageUrl);
+      } else {
+        const twitterTag = document.createElement("meta");
+        twitterTag.setAttribute("content", ogImageUrl);
+        document.head.appendChild(twitterTag);
       }
     }
   }, [ogImageUrl]);
