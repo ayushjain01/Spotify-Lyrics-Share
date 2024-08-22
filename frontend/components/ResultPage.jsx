@@ -10,6 +10,7 @@ export default function ResultPage() {
   const [data, setData] = useState(null);
   const [highlightedLines, setHighlightedLines] = useState({});
   const [ogImageUrl, setOgImageUrl] = useState(null);
+  const [backUrl, setBackUrl] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
@@ -95,7 +96,6 @@ export default function ResultPage() {
               newTag.textContent = resultData.title;
               document.head.appendChild(newTag);
             }
-
           } else if (response.status === 404) {
             router.push("/404");
           } else {
@@ -131,18 +131,18 @@ export default function ResultPage() {
   }, [highlightedLines, router]);
 
   useEffect(() => {
-    if (ogImageUrl) {
+    if (backUrl) {
       const metaTag = document.querySelector('meta[property="og:image"]');
       if (metaTag) {
-        metaTag.setAttribute("content", ogImageUrl);
+        metaTag.setAttribute("content", backUrl);
       } else {
         const newMetaTag = document.createElement("meta");
         newMetaTag.setAttribute("property", "og:image");
-        newMetaTag.setAttribute("content", ogImageUrl);
+        newMetaTag.setAttribute("content", backUrl);
         document.head.appendChild(newMetaTag);
       }
     }
-  }, [ogImageUrl]);
+  }, [backUrl]);
 
   const cleanLyrics = (lyrics) => {
     return lyrics
@@ -192,16 +192,16 @@ export default function ResultPage() {
     const shareUrl = newUrl.toString();
 
     try {
-      const response = await fetch(
+      const url =
         "https://spotify-lyrics-share.onrender.com/get-og?" +
-          new URLSearchParams({
-            lyrics: selectedLyrics,
-            title: data.title,
-          })
-      );
+        new URLSearchParams({
+          lyrics: selectedLyrics,
+          title: data.title,
+        });
+      const response = await fetch(url);
       const ogImageBlob = await response.blob();
       const ogImageObjectUrl = URL.createObjectURL(ogImageBlob);
-
+      setBackUrl(url);
       setOgImageUrl(ogImageObjectUrl);
       setShowPopup(true);
 
