@@ -22,12 +22,6 @@ export const metadata = {
       },
     ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Lyrics Share - Dynamic Open Graph Generation",
-    description:
-      "This project is inspired by the lyrics share feature on Spotify, which allows users to select specific excerpts from a song and share them with friends. The backend generates a custom Open Graph preview image for the selected lyrics, making it easy to share highlighted lyrics visually.",
-  },
 };
 
 export default function RootLayout({ children }) {
