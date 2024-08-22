@@ -192,7 +192,7 @@ export default function ResultPage() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/get-og?" +
+        "https://spotify-lyrics-share.onrender.com/get-og?" +
           new URLSearchParams({
             lyrics: selectedLyrics,
             title: data.title,
