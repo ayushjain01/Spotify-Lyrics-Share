@@ -2,7 +2,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "../../components/Loading";
-import { notFound } from "next/navigation";
 
 export default function ResultPage() {
   const router = useRouter();

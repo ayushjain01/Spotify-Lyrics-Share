@@ -12,7 +12,7 @@ export default function Navbar() {
         </div>
         <div className="mr-2 flex items-center hidden md:flex">
           <a
-            href="/"
+            href="/learn-more"
             className="px-2 py-2 text-white flex items-center font-bold border border-black rounded mr-4 hover:border-white"
             >
             learn more

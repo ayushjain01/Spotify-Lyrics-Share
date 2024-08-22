@@ -15,7 +15,7 @@ export const metadata = {
     "This project is inspired by the lyrics share feature on Spotify, which allows users to select specific excerpts from a song and share them with friends. The backend generates a custom Open Graph preview image for the selected lyrics, making it easy to share highlighted lyrics visually.",
     images: [
       {
-        url: "",
+        url: "/preview.png",
         width: 800,
         height: 600,
       },
