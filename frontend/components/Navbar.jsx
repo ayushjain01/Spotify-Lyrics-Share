@@ -17,7 +17,7 @@ export default function Navbar() {
             >
             learn more
           </a>
-          <a href="github.com">
+          <a href="https://github.com/ayushjain01/Spotify-Lyrics-Share">
             <img
               src="/github-mark.svg"
               alt="GitHub Logo"
