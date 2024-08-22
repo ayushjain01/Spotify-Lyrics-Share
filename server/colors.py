@@ -1,3 +1,4 @@
+# FOR LATER USE
 from colorthief import ColorThief
 import requests
 from io import BytesIO
