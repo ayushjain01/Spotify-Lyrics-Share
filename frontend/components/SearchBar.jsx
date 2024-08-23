@@ -8,8 +8,7 @@ export default function SearchBar() {
 
   const handleSearch = () => {
     if (trackName) {
-      const query = `track=${encodeURIComponent(trackName)}`;
-      router.push(`/result?${query}`);
+      router.push(`/result/${trackName}`);
     }
   };
 

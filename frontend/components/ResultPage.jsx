@@ -1,123 +1,18 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
 
-export default function ResultPage() {
+export default function ResultPage({ data, highlightedLines, highlightedLyrics }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [track, setTrack] = useState(null);
-  const [data, setData] = useState(null);
-  const [highlightedLines, setHighlightedLines] = useState({});
   const [ogImageUrl, setOgImageUrl] = useState(null);
-  const [backUrl, setBackUrl] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-
-  useEffect(() => {
-    const trackQueryParam = searchParams.get("track");
-    if (trackQueryParam) {
-      setTrack(trackQueryParam);
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (track) {
-        try {
-          const apiUrl = `https://lyrist.vercel.app/api/${track}`;
-          const response = await fetch(apiUrl);
-
-          if (response.ok) {
-            const resultData = await response.json();
-
-            if (!resultData || !resultData.title) {
-              router.push("/404");
-              return;
-            }
-
-            setData(resultData);
-            const highlighted = searchParams.get("highlighted");
-            if (highlighted) {
-              const indices = highlighted.split(",").map(Number);
-              const highlightedObj = indices.reduce((acc, index) => {
-                acc[index] = true;
-                return acc;
-              }, {});
-              setHighlightedLines(highlightedObj);
-            }
-
-            let tag = document.querySelector('meta[property="og:title"]');
-            if (tag) {
-              tag.setAttribute("content", resultData.title);
-            } else {
-              const newTag = document.createElement("meta");
-              newTag.setAttribute("property", "og:title");
-              newTag.setAttribute("content", resultData.title);
-              document.head.appendChild(newTag);
-            }
-
-            tag = document.querySelector('meta[property="og:description"]');
-            if (tag) {
-              tag.setAttribute(
-                "content",
-                resultData.title + " Song lyrics with custom open graph"
-              );
-            } else {
-              const newTag = document.createElement("meta");
-              newTag.setAttribute("property", "og:description");
-              newTag.setAttribute(
-                "content",
-                resultData.title + " Song lyrics with custom open graph"
-              );
-              document.head.appendChild(newTag);
-            }
-
-            tag = document.querySelector('meta[name="description"]');
-            if (tag) {
-              tag.setAttribute(
-                "content",
-                resultData.title + " Song lyrics with custom open graph"
-              );
-            } else {
-              const newTag = document.createElement("meta");
-              newTag.setAttribute("name", "description");
-              newTag.setAttribute(
-                "content",
-                resultData.title + " Song lyrics with custom open graph"
-              );
-              document.head.appendChild(newTag);
-            }
-
-            tag = document.querySelector("title");
-            if (tag) {
-              tag.textContent = resultData.title;
-            } else {
-              const newTag = document.createElement("title");
-              newTag.textContent = resultData.title;
-              document.head.appendChild(newTag);
-            }
-          } else if (response.status === 404) {
-            router.push("/404");
-          } else {
-            console.error("Error fetching data:", response.status);
-            router.push("/404");
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          router.push("/404");
-        }
-      }
-    };
-    fetchData();
-  }, [track, searchParams, router]);
+  const [selectedLines, setSelectedLines] = useState([]);
+  const [selectionStart, setSelectionStart] = useState(null);
 
   useEffect(() => {
     const updateUrlWithHighlightedLines = () => {
-      const highlightedIndices = Object.keys(highlightedLines)
-        .filter((key) => highlightedLines[key])
-        .map((key) => parseInt(key))
-        .join(",");
-
+      const highlightedIndices = selectedLines.join(",");
       const newUrl = new URL(window.location.href);
       if (highlightedIndices) {
         newUrl.searchParams.set("highlighted", highlightedIndices);
@@ -128,21 +23,8 @@ export default function ResultPage() {
     };
 
     updateUrlWithHighlightedLines();
-  }, [highlightedLines, router]);
+  }, [selectedLines, router]);
 
-  useEffect(() => {
-    if (backUrl) {
-      const metaTag = document.querySelector('meta[property="og:image"]');
-      if (metaTag) {
-        metaTag.setAttribute("content", backUrl);
-      } else {
-        const newMetaTag = document.createElement("meta");
-        newMetaTag.setAttribute("property", "og:image");
-        newMetaTag.setAttribute("content", backUrl);
-        document.head.appendChild(newMetaTag);
-      }
-    }
-  }, [backUrl]);
 
   const cleanLyrics = (lyrics) => {
     return lyrics
@@ -152,30 +34,30 @@ export default function ResultPage() {
   };
 
   const handleLyricsClick = (index) => {
-    const highlightedIndices = Object.keys(highlightedLines)
-      .filter((key) => highlightedLines[key])
-      .map((key) => parseInt(key));
-
+    const highlightedIndices = selectedLines;
+  
     if (highlightedIndices.length === 0) {
-      setHighlightedLines({ [index]: true });
+      setSelectedLines([index]);
+      setSelectionStart(index);
     } else {
       const minIndex = Math.min(...highlightedIndices);
       const maxIndex = Math.max(...highlightedIndices);
-
+  
       if (highlightedIndices.includes(index)) {
-        const newHighlightedLines = { ...highlightedLines };
-        delete newHighlightedLines[index];
-        setHighlightedLines(newHighlightedLines);
+        // Deselect the line if it is already selected
+        setSelectedLines(highlightedIndices.filter(i => i !== index));
+        if (index === selectionStart) {
+          setSelectionStart(null);
+        }
       } else if (
         (index === minIndex - 1 || index === maxIndex + 1) &&
         highlightedIndices.length < 4
       ) {
-        setHighlightedLines((prev) => ({
-          ...prev,
-          [index]: true,
-        }));
+        setSelectedLines((prev) => [...prev, index]);
       } else {
-        setHighlightedLines({ [index]: true });
+        // Start a new selection
+        setSelectedLines([index]);
+        setSelectionStart(index);
       }
     }
   };
@@ -183,7 +65,10 @@ export default function ResultPage() {
   const lines = cleanLyrics(data?.lyrics || "");
 
   const getSelectedLyrics = () => {
-    return lines.filter((_, index) => highlightedLines[index]).join("\n");
+    return lines
+      .map((line, index) => selectedLines.includes(index) ? line : null)
+      .filter(line => line !== null)
+      .join("\n");
   };
 
   const handleShare = async () => {
@@ -199,9 +84,9 @@ export default function ResultPage() {
           title: data.title,
         });
       const response = await fetch(url);
+      if (!response.ok) throw new Error("Failed to fetch OG image");
       const ogImageBlob = await response.blob();
       const ogImageObjectUrl = URL.createObjectURL(ogImageBlob);
-      setBackUrl(url);
       setOgImageUrl(ogImageObjectUrl);
       setShowPopup(true);
 
@@ -264,8 +149,8 @@ export default function ResultPage() {
           {lines.map((line, index) => (
             <button
               key={index}
-              className={`block w-full text-left p-1 m-0 rounded-md ${
-                highlightedLines[index]
+              className={`block w-full text-left p-1 pl-2 m-0 rounded-md ${
+                selectedLines.includes(index)
                   ? "bg-newYellow hover:bg-yellow-500 text-zinc-800"
                   : "bg-zinc-900 hover:bg-zinc-800"
               } text-white`}
@@ -276,7 +161,7 @@ export default function ResultPage() {
           ))}
         </div>
       </div>
-      {Object.keys(highlightedLines).length > 0 && (
+      {selectedLines.length > 0 && (
         <div className="fixed bottom-4 left-0 right-0 flex justify-center">
           <button
             className="px-4 py-2 bg-newYellow text-zinc-800 rounded-md transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
