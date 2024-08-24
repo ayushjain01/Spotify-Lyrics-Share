@@ -94,7 +94,7 @@ export default function ResultPage({
       const ogImageObjectUrl = URL.createObjectURL(ogImageBlob);
       setOgImageUrl(ogImageObjectUrl);
       setIsLoading(false);
-
+      document.body.focus();
       await navigator.clipboard.writeText(shareUrl);
       console.log("Copied URL to clipboard:", shareUrl);
     } catch (error) {
