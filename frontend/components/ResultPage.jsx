@@ -2,13 +2,18 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
+import { Audio } from "react-loader-spinner";
 
-export default function ResultPage({ data, highlightedLines, highlightedLyrics }) {
+export default function ResultPage({
+  data,
+  highlightedLines,
+}) {
   const router = useRouter();
   const [ogImageUrl, setOgImageUrl] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedLines, setSelectedLines] = useState([]);
+  const [selectedLines, setSelectedLines] = useState(highlightedLines || []);
   const [selectionStart, setSelectionStart] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const updateUrlWithHighlightedLines = () => {
@@ -25,7 +30,6 @@ export default function ResultPage({ data, highlightedLines, highlightedLyrics }
     updateUrlWithHighlightedLines();
   }, [selectedLines, router]);
 
-
   const cleanLyrics = (lyrics) => {
     return lyrics
       .split("\n")
@@ -35,17 +39,16 @@ export default function ResultPage({ data, highlightedLines, highlightedLyrics }
 
   const handleLyricsClick = (index) => {
     const highlightedIndices = selectedLines;
-  
+
     if (highlightedIndices.length === 0) {
       setSelectedLines([index]);
       setSelectionStart(index);
     } else {
       const minIndex = Math.min(...highlightedIndices);
       const maxIndex = Math.max(...highlightedIndices);
-  
+
       if (highlightedIndices.includes(index)) {
-        // Deselect the line if it is already selected
-        setSelectedLines(highlightedIndices.filter(i => i !== index));
+        setSelectedLines(highlightedIndices.filter((i) => i !== index));
         if (index === selectionStart) {
           setSelectionStart(null);
         }
@@ -55,7 +58,6 @@ export default function ResultPage({ data, highlightedLines, highlightedLyrics }
       ) {
         setSelectedLines((prev) => [...prev, index]);
       } else {
-        // Start a new selection
         setSelectedLines([index]);
         setSelectionStart(index);
       }
@@ -66,8 +68,8 @@ export default function ResultPage({ data, highlightedLines, highlightedLyrics }
 
   const getSelectedLyrics = () => {
     return lines
-      .map((line, index) => selectedLines.includes(index) ? line : null)
-      .filter(line => line !== null)
+      .map((line, index) => (selectedLines.includes(index) ? line : null))
+      .filter((line) => line !== null)
       .join("\n");
   };
 
@@ -75,6 +77,9 @@ export default function ResultPage({ data, highlightedLines, highlightedLyrics }
     const selectedLyrics = getSelectedLyrics();
     const newUrl = new URL(window.location.href);
     const shareUrl = newUrl.toString();
+
+    setShowPopup(true);
+    setIsLoading(true);
 
     try {
       const url =
@@ -88,12 +93,13 @@ export default function ResultPage({ data, highlightedLines, highlightedLyrics }
       const ogImageBlob = await response.blob();
       const ogImageObjectUrl = URL.createObjectURL(ogImageBlob);
       setOgImageUrl(ogImageObjectUrl);
-      setShowPopup(true);
+      setIsLoading(false);
 
       await navigator.clipboard.writeText(shareUrl);
       console.log("Copied URL to clipboard:", shareUrl);
     } catch (error) {
       console.error("Error handling share:", error);
+      setIsLoading(false);
       router.push("/404");
     }
   };
@@ -171,7 +177,7 @@ export default function ResultPage({ data, highlightedLines, highlightedLyrics }
           </button>
         </div>
       )}
-      {showPopup && ogImageUrl && (
+      {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center">
           <div className="relative bg-white p-4 rounded-md">
             <button
@@ -180,13 +186,32 @@ export default function ResultPage({ data, highlightedLines, highlightedLyrics }
             >
               &times;
             </button>
-            <p className="text-center m-2 text-zinc-800">
-              custom generated open graph image:
-            </p>
-            <img src={ogImageUrl} alt="OG Image" className="w-full max-w-md" />
-            <p className="text-center m-2 text-zinc-800">
-              link copied to your clipboard.
-            </p>
+            {isLoading ? (
+              <div className="flex justify-center items-center">
+                <Audio
+                  height="80"
+                  width="80"
+                  color="#FFC700"
+                  ariaLabel="loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                />
+              </div>
+            ) : (
+              <>
+                <p className="text-center m-2 text-zinc-800">
+                  custom generated open graph image:
+                </p>
+                <img
+                  src={ogImageUrl}
+                  alt="OG Image"
+                  className="w-full max-w-md"
+                />
+                <p className="text-center m-2 text-zinc-800">
+                  link copied to your clipboard.
+                </p>
+              </>
+            )}
           </div>
         </div>
       )}
