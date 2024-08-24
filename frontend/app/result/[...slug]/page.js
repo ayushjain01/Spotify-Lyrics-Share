@@ -61,7 +61,7 @@ export async function generateMetadata({ params, searchParams }) {
     } else {
       metadata.openGraph.images = [
         {
-          url: "https://i.ibb.co/bgKQM17/preview.png",
+          url: `https://spotify-lyrics-share.onrender.com/get-og-title/?title=${data.title}`,
           width: 1200,
           height: 630,
         },
