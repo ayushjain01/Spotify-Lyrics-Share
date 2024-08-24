@@ -25,3 +25,10 @@ async def get_og(
 ):    
     img = generate_og.make_og_image(lyrics, title) 
     return Response(content=img, media_type="image/png")
+
+@app.get("/get-og-title")
+async def get_og(
+    title: str = Query(..., description="The title of the track")
+):    
+    img = generate_og.make_title_image( title) 
+    return Response(content=img, media_type="image/png")
