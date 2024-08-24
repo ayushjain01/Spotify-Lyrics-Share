@@ -34,14 +34,15 @@ async def get_og(
 ):    
     img = generate_og.make_title_image( title) 
     return Response(content=img, media_type="image/png")
+
 #This function is only to tackle the problem of automatic spin down of instance on render due to inactivity 
 def ping_server():
     try:
-        requests.get("http://localhost:8000/")
+        requests.get("https://spotify-lyrics-share.onrender.com/")
         print("Pinged Server Successfully")
     except Exception as e:
         print(f"An error occurred while pinging the server: {e}")
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(ping_server, "interval", minutes=1)
+scheduler.add_job(ping_server, "interval", minutes=10)
 scheduler.start()
