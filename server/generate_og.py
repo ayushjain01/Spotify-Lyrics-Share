@@ -6,20 +6,15 @@ def split_text(text, draw, font, max_width):
     lines = []
     lines_content = text.split('\n')
     current_line = ""
-    print("lines_content", lines_content)
     for line_content in lines_content:
         words = line_content.split(" ")
         for word in words:
-            print("here", word, current_line)
             test_line = f"{current_line} {word}".strip()
             text_width = draw.textlength(test_line, font=font)
 
             if text_width <= max_width:
-                print("hereeee", word, current_line)
-
                 current_line = test_line
             else:
-                print("hessssreeee", word, current_line)
                 if current_line:
                     lines.append(current_line)
                 current_line = word
@@ -38,9 +33,7 @@ def add_text_to_image(image_path, lyrics, lyrics_font_size, lyrics_font_path, so
     song_title_font = ImageFont.truetype(song_title_font_path, song_title_font_size)
 
     max_text_width = 1084
-    print(lyrics)
     lyrics_lines = split_text(lyrics, draw, lyrics_font, max_text_width)
-    print(lyrics_lines)
     song_title_lines = split_text(song_title, draw, song_title_font, max_text_width)
 
     lyrics_height = lyrics_font_size * len(lyrics_lines) * 1.2
@@ -103,7 +96,7 @@ def make_og_image(lyrics, song_title):
         song_title_font_path=song_title_font_path,
         text_color=text_color
     )
-    
+    print(f"Generated Image for song: {song_title} with lyrics: {lyrics}")
     return image_data
 
 def make_title_image(song_title):
@@ -119,5 +112,5 @@ def make_title_image(song_title):
         song_title_font_path=song_title_font_path,
         text_color=text_color
     )
-    
+    print(f"Generated title image for song: {song_title}")
     return image_data
