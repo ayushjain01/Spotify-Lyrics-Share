@@ -4,16 +4,14 @@ import { useEffect, useState } from "react";
 import Loading from "./Loading";
 import { Audio } from "react-loader-spinner";
 
-export default function ResultPage({
-  data,
-  highlightedLines,
-}) {
+export default function ResultPage({ data, highlightedLines }) {
   const router = useRouter();
   const [ogImageUrl, setOgImageUrl] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedLines, setSelectedLines] = useState(highlightedLines || []);
   const [selectionStart, setSelectionStart] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false); 
 
   useEffect(() => {
     const updateUrlWithHighlightedLines = () => {
@@ -94,9 +92,6 @@ export default function ResultPage({
       const ogImageObjectUrl = URL.createObjectURL(ogImageBlob);
       setOgImageUrl(ogImageObjectUrl);
       setIsLoading(false);
-      document.body.focus();
-      await navigator.clipboard.writeText(shareUrl);
-      console.log("Copied URL to clipboard:", shareUrl);
     } catch (error) {
       console.error("Error handling share:", error);
       setIsLoading(false);
@@ -104,9 +99,22 @@ export default function ResultPage({
     }
   };
 
+  const handleCopyLink = async () => {
+    const newUrl = new URL(window.location.href);
+    const shareUrl = newUrl.toString();
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setLinkCopied(true);
+      console.log("Copied URL to clipboard:", shareUrl);
+    } catch (error) {
+      console.error("Failed to copy URL:", error);
+    }
+  };
+
   const closePopup = () => {
     setShowPopup(false);
     setOgImageUrl(null);
+    setLinkCopied(false); 
   };
 
   if (!data) {
@@ -207,9 +215,14 @@ export default function ResultPage({
                   alt="OG Image"
                   className="w-full max-w-md"
                 />
-                <p className="text-center m-2 text-zinc-800">
-                  link copied to your clipboard.
-                </p>
+                <div className="text-center mt-2">
+                  <button
+                    className="px-4 py-2 bg-newYellow text-zinc-800 rounded-md"
+                    onClick={handleCopyLink}
+                  >
+                    {linkCopied ? "Link Copied!" : "Copy Link"}
+                  </button>
+                </div>
               </>
             )}
           </div>
