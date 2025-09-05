@@ -49,10 +49,18 @@ export const metadata = {
   },
 };
 
-export default function SampleFallbackPage() {
+export default function SampleFallbackPage({ searchParams }) {
+  let highlightedLines = [];
+  if (searchParams?.highlighted) {
+    highlightedLines = searchParams.highlighted
+      .split(",")
+      .map((num) => parseInt(num, 10))
+      .filter((n) => !isNaN(n));
+  }
+
   return (
     <SuspenseWrapper>
-      <ResultPage data={FALLBACK_SONG} highlightedLines={[]} />
+      <ResultPage data={FALLBACK_SONG} highlightedLines={highlightedLines} />
     </SuspenseWrapper>
   );
 }
