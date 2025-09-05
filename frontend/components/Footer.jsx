@@ -22,8 +22,14 @@ export default function Footer() {
           <img src="/logo.svg" alt="Logo" className="h-8 mr-4" /> lyrics share
         </a>
         <p className="text-sm text-gray-600 sm:text-center mt-2 dark:text-gray-400">
-          © 2024 | made by 
-          <a href="https://www.linkedin.com/in/ayush---jain/" className="font-bold"> ayush jain</a>
+          © 2025 | made by
+          <a
+            href="https://www.linkedin.com/in/ayush---jain/"
+            className="font-bold"
+          >
+            {" "}
+            ayush jain
+          </a>
           . all rights reserved.
         </p>
       </div>
